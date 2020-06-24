@@ -1,0 +1,85 @@
+
+<!DOCTYPE html>
+
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>Understanding the Nmap SYN Scan</title>
+		<meta name="viewpoint" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://font.googleapis.com/css?family=Roboto:400,400f,500,500f,700,700f,900,900f">
+		<link rel="stylesheet" href="reset.css">
+		<link rel="stylesheet" href="-debug.css">
+		<link rel="stylesheet" href="article.css">
+		<link rel="stylesheet" href="article-figure.css">
+		<link rel="stylesheet" href="article-text.css">
+		<link rel="stylesheet" href="image-share.css">
+		<link rel="stylesheet" href="navbar.css">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	</head>
+
+
+	<body>
+	<nav role="full-horizontal">
+	<ul class="topnav">
+		<li> <a href="index.html">Home</a></li>
+		<li> <a href="CyberNews.html" class="active">Cyber News</a></li>
+		<li> <a href="CertificationReviews.html">Certification Reviews</a></li>
+		<li> <a href="Write-Ups/Write-Ups.html">Write-ups</a></li>
+	
+	</ul>
+	</nav>
+
+
+	<article>
+	
+
+
+
+
+			<h1>Understanding the Nmap SYN Scan</h1>
+			<time datetime="06-23-2020">June 23, 2020 </time>
+			
+				<h3 class="warning">Disclaimer: Unauthorized port scanning is illegal and should not be done. Please ensure you have WRITTEN PERMISSION beforehand.</h3> 
+			<br>
+			<br>
+			<br>
+			<p>
+				Nmap is a free and open-source popular port scanner used to detect ports and services being utilized on a network. It is a useful tool to see avenues for exploitation. By default Nmap will scan utilizing the TCP SYN scan, also known as a stealth scan. This method takes advantage of the TCP 3 way handshake process. As a refresher the handshake process operates in this order:
+			<br>
+			<br>
+				<ol>
+					<li>My machine sends a SYN flag to the target machine.</li>
+					<li> Target machine responds to my machine with a SYN/ACK flag </li>
+					<li>My machine responds with an ACK flag and thus the connection between the two machines is established.
+				</ol>
+			<br>
+			<br>
+			</p>
+			<p>
+			<br>
+			<br>
+			As part of the stealth scan Nmap will initiate the process to the target host specified to see which port is open. This can be initiated with root privileges running the command: <strong> nmap &lt;target host IP&gt; </strong> or <strong> nmap -sS &lt;target host IP&gt;</strong>. If the host responds with a SYN/ACK flag Nmap will list that port as open. Instead of responding with an ACK flag, Nmap will send back a TCP RST flag to kill the connection. An attacker will be able to stealthily perform reconaissance on a target as a firewall would not log an incomplete connection. In short a SYN scan on an open looks like this:
+			<br>				
+			<br>
+				<ol>
+					<li>My machine sends a SYN flag to the target machine.</li>
+					<li> Target machine responds to my machine with a SYN/ACK flag </li>
+					<li>Port is found open, my machine responds with a RST flag to kill the connection.</li>
+				</ol>
+ 
+
+			</p>
+		<br>
+		<br>
+			<p>
+			This might not often be the case however. If Nmap does not recieve a SYN/ACK flag from the target machine but instead an RST flag this will indicate the port is closed. Nmap may also recieve nothing at all after sending the SYN flag which can be due to usually a firewall, the host being down, or the machine just responding too slowly.   
+			</p>
+
+			<br>
+			<br>
+	
+	</article>
+
+</body>
+</html>

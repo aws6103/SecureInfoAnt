@@ -1,0 +1,15 @@
+.share {
+	display: inline-block;
+	justify-content: center;
+}
+
+.share img {
+	width: 10rem;
+	height: auto;
+}
+
+.responsive {
+
+width: 90%;
+height: auto;
+}

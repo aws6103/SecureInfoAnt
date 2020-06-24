@@ -1,0 +1,169 @@
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>Simple-CTF Write-up</title>
+		<meta name="viewpoint" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://font.googleapis.com/css?family=Roboto:400,400f,500,500f,700,700f,900,900f">
+		<link rel="stylesheet" href="../../../reset.css">
+		<link rel="stylesheet" href="../../../-debug.css">
+		<link rel="stylesheet" href="../../../article.css">
+		<link rel="stylesheet" href="../../../article-figure.css">
+		<link rel="stylesheet" href="../../../article-text.css">
+		<link rel="stylesheet" href="../../../image-share.css">
+		<link rel="stylesheet" href="../../../navbar.css">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	</head>
+
+
+	<body>
+	<nav role="full-horizontal">
+	<ul class="topnav">
+		<li> <a href="../../../index.html">Home</a></li>
+		<li> <a href="../../../CyberNews.html">Cyber News</a></li>
+		<li> <a href="../../../CertificationReviews.html">Certification Reviews</a></li>
+		<li> <a href="../../Write-Ups.html" class="active">Write-ups</a></li>
+	
+	</ul>
+	</nav>
+
+
+	<article>
+
+
+	<h1> SimpleCTF </h1>
+	<time datetime="06-24-2020">June 24, 2020 </time>
+			
+	<p>
+	<br>
+	Simple-CTF is a beginner level ctf in TryHackMe. We first start running a nmap scan on to our target machine. The command creating the ouput below was: <strong> sudo nmap -sV &lt;Target IP&gt;</strong>.
+	</p>
+<br>
+	<img src="NmapScan.PNG" class="responsive">
+	<p>
+	By running this scan we are able to see the number of ports under 1000 which is an answer for question 1. 
+	<br>
+	<strong>1. 2 </strong>
+	<br>
+	We are then able to see what service is running on the higher port, which is that port 2222 which is shown to be running SSH. That is the answer for question 2.
+	<br>
+	<strong>2. ssh</strong>
+	<br>
+	The next question requires us to find a CVE which allows us to exploit this machine. But first we need to continue to discover more avenues to attacks. Looking up the IP address on our search engine produces the Apache default page. 
+<br>	
+<img src="Apachepage.PNG" class="responsive">
+<br>
+<br>
+<br>
+
+Further investugation into the robot.txt file does not offer much. 
+
+This is when I decided to use the director traversal tool gobuster. To retrieve the desired output I used the command: <strong> gobuster dir -u &lt;Target IP&gt; -w /usr/share/wordlists/dirb/common.txt -x txt,html,php</strong>. This would bruteforce through directories and files searching for files with the exension .html, .php, or.txt while using the common.txt wordlist.
+<br>	
+<img src="gobuster.PNG" class="responsive">
+<br>
+<br>
+<br>
+Based on the output I am shown three objects if interest, the index.html, robots.txt, and /simple directory. Having already explored the first two files, I would now look into the simple directory on my search engine.
+	</p>
+<br>
+<img src="SMSmadesimple.PNG" class="responsive">
+			
+<p>
+<br>
+
+<br>
+In doing we see this page and found it running version 2.2.8. I then decided to search vulnerabilties associated with CMS made simple version 2.2.8 on google. I was able to find this through the exploit database.
+<br>
+
+<img src="exploitdb.PNG" class="responsive">
+<br>
+<br>
+From here I was able to find the correct answer for question 3. 
+<br> 
+<strong>3. CVE-2019-9053</strong>
+<br> Based on the title of the vulnerability we can infer that this would be an SQL injection vulnerability which would be the answer for question 4.
+<br>
+<strong>4. sqli</strong>
+<br>The next question prompts us to look for a password for the user. The only hint provided to us is to use the best110.txt wordlist. As I only have the python script from the exploit database I copied that on to my own machine and set it up. Now my machine could not run originally the script due to Python3 changing the way print statements are interpret. When trying it to run on python2 I was unable to set up and install Pip for the required modules for the script. So I had to manually go through the script and include parenthesis for each print statement as shown below for it to run through python3. 
+<br>
+<br>
+<img src="fixpythonscript.PNG" class="responsive">
+
+<br>
+<br>
+When we finally run the script we see the input it requires. As shown below it requires a target url, and a wordlist to use.
+<img src="pythonneeds.PNG" class="responsive">
+<br>
+<br>
+So our command will have to look like the one shown below: <strong> sudo python3 &lt;script-name.py&gt; http://&lt;target IP&gt; -w best110.txt.</strong>
+<br>
+<img src="pythonscriptcommand.PNG" class="responsive">
+<br>
+<br>
+The script would produce the following output.
+<img src="pythonscript.PNG" class="responsive">
+<br>
+<br>
+The script would show us a username. A user by the name of <strong>mitch</strong>. We can use that to crack bruteforce the user for a passcode with the tool hydra. We can bruteforce through ssh as that's open for us through port number 2222. So for that to happen my command for hydra would have to look like: <strong>hydra -l mitch -P &lt;rockyou.txt&gt; ssh://&lt;target IP&gt;:2222</strong>. 
+<br>
+<img src="hyrdraoutput.PNG" class="responsive">
+<br>
+<br>
+From the above output we can see the password was cracked which is our answer for question 5.
+<br>
+<strong>5. secret</strong>
+<br>
+We are able to use the credentials and attempt to login through ssh with port number 2222. Our command will have to look like the one below: <strong> ssh mitch@&lt;target IP&gt; -p 2222</strong>
+<br>
+<img src="ssh.PNG" class="responsive">
+<br>
+<br>
+By being able to successfully connect we have have our answer for question 6!
+<br>
+<strong>6. ssh</strong>
+<br>
+<br>
+By running the <strong>ls</strong> command we are able to see a list of all the files in mitch's directory. We find a file called user.txt. Simplu using the <strong>cat</strong> command allows us to read whats in the file.
+<img src="userflag.PNG" class="responsive">
+<br>
+<br>
+Our answer is shown for question 7 is shown above.
+<br>
+<strong>7. G00d j0b, keep up!</strong>
+<br>
+By moving into the home directory we found another user besides mitch. This would be our answer for question 8.
+<br>
+<strong>8. sunbath</strong>
+<br>
+The next questions prompts us for how we will able to escalate root privileges. We can check to see our sudo privileges with the command <strong>sudo -l</strong>. 
+<br>
+<img src="usersudo.PNG" class="responsive">
+<br>
+<br>
+The output below tells us what we are allowed to run. What we are shown is that we can run <strong>vim</strong> without requiring a password.Creating a bash script with the command: <strong>sudo vim &lt;samplefilename&gt;.sh</strong> will allow us to fire up vim. Once open we can run the command: <strong>!bash</strong>. As shown below we are now running as root user.
+<img src="root.PNG" class="responsive">
+<br>
+<br>
+By using vim we have found our answer for question 9.
+<br>
+<strong>9. vim</strong>
+<br>
+Now all we have to do is to navigate to the root directory and find the root flag which we were easily able to do where we can the root.txt file.
+<br>
+ <img src="rootflag.PNG" class="responsive">
+<br>
+<br>
+Opening that up produces the output which is the answer for question 10.
+<br>
+<strong>10. W3ll don3. You made it!</strong>
+<br>
+We have now concluded the Simple-CTF. 
+</p>
+	
+
+	
+	</article>
+
+</body>
+</html>
