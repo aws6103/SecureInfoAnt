@@ -56,15 +56,15 @@
 <br>
 <br>
 
-Further investugation into the robot.txt file does not offer much. 
+Further investigation into the robot.txt file does not offer much. 
 
 This is when I decided to use the directory traversal tool gobuster. To retrieve the desired output I used the command: <strong> gobuster dir -u &lt;Target IP&gt; -w /usr/share/wordlists/dirb/common.txt -x txt,html,php</strong>. This would bruteforce through directories and files searching for files with the exension .html, .php, or.txt while using the common.txt wordlist.
 <br>	
 <img src="gobuster.PNG" class="responsive">
 <br>
 <br>
+Based on the output I am shown three objects of interest, the index.html, robots.txt, and /simple directory. Having already explored the first two files, I would now look into the simple directory on my search engine.
 <br>
-Based on the output I am shown three objects if interest, the index.html, robots.txt, and /simple directory. Having already explored the first two files, I would now look into the simple directory on my search engine.
 <br>
 	</p>
 <br>
@@ -75,6 +75,7 @@ Based on the output I am shown three objects if interest, the index.html, robots
 
 <br>
 In doing we see this page and found it running version 2.2.8. I then decided to search vulnerabilties associated with CMS made simple version 2.2.8 on google. I was able to find this through the exploit database.
+<br>
 <br>
 
 <img src="exploitdb.PNG" class="responsive">
