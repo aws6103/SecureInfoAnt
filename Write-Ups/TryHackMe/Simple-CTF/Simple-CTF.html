@@ -58,13 +58,14 @@
 
 Further investugation into the robot.txt file does not offer much. 
 
-This is when I decided to use the director traversal tool gobuster. To retrieve the desired output I used the command: <strong> gobuster dir -u &lt;Target IP&gt; -w /usr/share/wordlists/dirb/common.txt -x txt,html,php</strong>. This would bruteforce through directories and files searching for files with the exension .html, .php, or.txt while using the common.txt wordlist.
+This is when I decided to use the directory traversal tool gobuster. To retrieve the desired output I used the command: <strong> gobuster dir -u &lt;Target IP&gt; -w /usr/share/wordlists/dirb/common.txt -x txt,html,php</strong>. This would bruteforce through directories and files searching for files with the exension .html, .php, or.txt while using the common.txt wordlist.
 <br>	
 <img src="gobuster.PNG" class="responsive">
 <br>
 <br>
 <br>
 Based on the output I am shown three objects if interest, the index.html, robots.txt, and /simple directory. Having already explored the first two files, I would now look into the simple directory on my search engine.
+<br>
 	</p>
 <br>
 <img src="SMSmadesimple.PNG" class="responsive">
@@ -105,7 +106,7 @@ The script would produce the following output.
 <img src="pythonscript.PNG" class="responsive">
 <br>
 <br>
-The script would show us a username. A user by the name of <strong>mitch</strong>. We can use that to crack bruteforce the user for a passcode with the tool hydra. We can bruteforce through ssh as that's open for us through port number 2222. So for that to happen my command for hydra would have to look like: <strong>hydra -l mitch -P &lt;rockyou.txt&gt; ssh://&lt;target IP&gt;:2222</strong>. 
+The script would show us a username. A user by the name of <strong>mitch</strong>. We can use that to bruteforce the user for a passcode with the tool hydra. We can bruteforce through ssh as that's open for us through port number 2222. So for that to happen my command for hydra would have to look like: <strong>hydra -l mitch -P &lt;rockyou.txt&gt; ssh://&lt;target IP&gt;:2222</strong>. 
 <br>
 <img src="hyrdraoutput.PNG" class="responsive">
 <br>
