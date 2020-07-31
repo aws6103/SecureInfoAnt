@@ -110,7 +110,7 @@
 			 Now let's create a few basic examples. Our first rule would look a little something like this: <strong> 'alert tcp any any -> 192.0.0.1 80  (msg: "Sample message"; sid: 1000001)'</strong>. 
 			 To break this rule down we can see that Snort will alert us if our machine whose IP address at 192.0.0.1 at port 80 recieves a tcp packet from any source IP address and source port. 
 			 Our alert will provide us with a message stating "Sample message" and this rule can be identified with sid number 1000001. Our next rule would be this: <strong>'drop tcp any any -> 192.168.1.240/16 [22,25,80,139,440] (msg: "Target specific ports"; content: "Malicious content'; sid: 1000002;)</strong>.
-			 Now this not might be best of rules but this will drop all traffic directed to the network on ports 22,25,80,139,440 with specifc wording, "Malicious content" inside. Snort is a powerful tool. When creating rules it is best to have an understanding on vulnerabilites your systems face as well as what can be considered normal traffic 
+			 Now this might not be the best of rules but this will drop all traffic directed to the network on ports 22,25,80,139,440 with specifc wording, "Malicious content" inside. Snort is a powerful tool. When creating rules it is best to have an understanding on vulnerabilites your systems face as well as what can be considered normal traffic 
 			 from legitimate users and how these rules can be tailored to address them. 
 
 			</p>
