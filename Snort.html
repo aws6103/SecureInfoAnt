@@ -1,0 +1,123 @@
+
+
+<!DOCTYPE html>
+
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>Understanding Snort's Basic Rules</title>
+		<meta name="viewpoint" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://font.googleapis.com/css?family=Roboto:400,400f,500,500f,700,700f,900,900f">
+		<link rel="stylesheet" href="reset.css">
+		<link rel="stylesheet" href="-debug.css">
+		<link rel="stylesheet" href="article.css">
+		<link rel="stylesheet" href="article-figure.css">
+		<link rel="stylesheet" href="article-text.css">
+		<link rel="stylesheet" href="image-share.css">
+		<link rel="stylesheet" href="navbar.css">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	</head>
+
+
+	<body>
+	<nav role="full-horizontal">
+	<ul class="topnav">
+		<li> <a href="index.html">Home</a></li>
+		<li> <a href="CyberNews.html" class="active">Cyber Lessons</a></li>
+		<li> <a href="CertificationReviews.html">Certification Reviews</a></li>
+		<li> <a href="Write-Ups/Write-Ups.html">Write-ups</a></li>
+	
+	</ul>
+	</nav>
+
+
+	<article>
+	
+
+
+
+
+			<h1>Understanding Snort's Basic Rules</h1>
+			<time datetime="07-10-2020">July 10, 2020 </time>
+			
+			<br>
+			<br>
+			<p>
+			Snort is a free and open-source tool that is capable of performing traffic analysis, logging and intrusion detection. The tool is capable of being run on Windows as well as several Linux distributions. Knowing how to compose rules for Snort allow us to properly remain alert any possible intrusion or malicious activity on our network. 
+			Snort is a powerful tool and this post won't cover all aspects of what makes it up. It is best to consult the manual when setting up Snort.
+			<br>
+			<a href="http://manual-snort-org.s3-website-us-east-1.amazonaws.com" class="links"> The link to the Snort manual can be found here.</a> 
+			<br>
+			In this post we will go over the basics of rule writing. We will first begin by showing a model of what encompases a rule. 
+			<br>
+			<br>
+			<table>
+			<tr>
+				<th>Action</th>
+				<th>Protocol</th>
+				<th>Source Address</th>
+				<th>Source Port</th>
+				<th>Direction</th>
+				<th>Destination Address</th>
+				<th>Destination Port</th>
+				<th>Rule Option</th>
+			</tr>
+			</table>
+			</p>
+			
+			<br>
+			<p>
+			Let's begin with the first part, <strong>Action</strong>. Action would dictate what would occur when a packet matches the specific rule. The list below will specify a few actions that can occur:
+			<br>
+			<br>
+			<ul style="list-style-type:none;">
+				<li>Alert: Will create an alert based on the specified method and also log the packet</li>
+				<li>Log: Will log the packet</li>
+				<li>Pass: Will ignore the packet</li>
+				<li>Drop: Will drop and log the packet</li>
+			</ul>
+			
+			</p>
+			<p>
+			<br>
+			The second part, <strong>Protocol </strong> specifies what protocols Snort will look for. These are TCP, UDP, IP, and ICMP.
+			<br>				
+			<br>
+			For the third and sixth parts in the rule we have to include an IP address for a source and destination address. IP addresses on the left hand side indicate traffic from the source while addresses on the right are for traffic directed for the destination.
+			The term "<strong>any</strong>" can be used to specify any address. We can indicate a specific IP address by just writing an address such as "<strong>192.168.1.120</strong>". 
+			We are able to specify IP addresses in CIDR notation such as "<strong>192.168.1.0/24</strong>" would specifiy all IP addresses from <strong>192.168.1.0-192.168.1.255</strong>. 
+			If we want to use a list within a single rule we can write it in this comma-seperated format, "<strong>[192.168.60.0/24,192.168.61.0/24]</strong>" or like  "<strong>[192.168.1.1,192.168.1.2,192.168.1.3]</strong>".
+			<br>
+			<br>
+			For the fourth and seventh parts of the rule we ae directed to specify a port, a source port and destination port. Ports follow the same concept with IP addresses as those listed on the left hand side are from the source while those on the right are for the destination. 
+			Like with IP address we can use the term "<strong>any</strong>. We can specify a specific port like "<strong>80</strong>"
+			or a port range such as "<strong>1:1024</strong>". If we want to include specific multiple ports we can write "<strong>[22,25,80,443]</strong>".
+			<br>
+			<br>
+			Now for the fifth part of the rule is where we include our directional arrow. Snort would only consider arrows like "<strong>&#x2010;></strong>" or "<strong><></strong>". Anything listed on the left hand side of the "<strong>&#x2010;></strong>" arrow
+			would show it is traffic from the source while anything on the right would be for the destination. If a bidrectional arrow <strong><></strong> was used, this would tell Snort to consider the pair of IP addresses and ports on either side as source or destination. 
+			<br>
+			<br>
+			For the final part of the rule we would consider a few rule options that could be utilzed in Snort. Options are placed within parenthesis and are identified with their key name such as <strong>msg</strong> followed by a colon, then it's respective value.
+			The option is finished with a semicolon. Let's look how a few rule options might look. <Strong>msg</strong> will print out text when there is a match found for the rule. It will look like this: <strong>(msg: "Example Text";)</strong>. Let's look at another one.
+			<strong>sid</strong> is stands for signature identification and is used to identify snort rules with their own ID. As a reference any rule with an SID greater or equal to 1000000 is allowed for local use while 100-999999 is already included within Snort.
+			Let's include <strong>sid</strong> into the <strong>msg</strong> rule option we already included earlier. This would look like: <strong>(msg: "Example Text"; sid:1000001)</strong>. While there are many more options, these two are useful in providing context
+			about the rule. Let's look at what is a considered a payload option. <strong>content</strong> is a useful option to look for specific content within a packet. There are a wide variety of ways one can utilize content to look for packets. Utilizing a pair of qoutation marks
+			would search for strings. It is important to know that the content we specify are case sensitive. We can also use pipes '<strong>|</strong>' to look for hex values. Let's try an example with the general options we used before.
+			Our content options might look like this: <strong>(msg: "Example Text"; sid:1000001; content: "Our string of |65 78 61 6d 70 6c 65| text";)</strong>. There are a wide variety of options available to use for content that can help look for specific content within our rules. 
+			Be sure to consult the manual to look for more options that are available.
+			<br>
+			<br>
+			 Now let's create a few basic examples. Our first rule would look a little something like this: <strong> 'alert tcp any any -> 192.0.0.1 80  (msg: "Sample message"; sid: 1000001)'</strong>. 
+			 To break this rule down we can see that Snort will alert us if our machine whose IP address at 192.0.0.1 at port 80 recieves a tcp packet from any source IP address and source port. 
+			 Our alert will provide us with a message stating "Sample message" and this rule can be identified with sid number 1000001. Our next rule would be this: <strong>'drop tcp any any -> 192.168.1.240/16 [22,25,80,139,440] (msg: "Target specific ports"; content: "Malicious content'; sid: 1000002;)</strong>.
+			 Now this not might be best of rules but this will drop all traffic directed to the network on ports 22,25,80,139,440 with specifc wording, "Malicious content" inside. Snort is a powerful tool. When creating rules it is best to have an understanding on vulnerabilites your systems face as well as what can be considered normal traffic 
+			 from legitimate users and how these rules can be tailored to address them. 
+
+			</p>
+	
+	</article>
+
+</body>
+</html>
